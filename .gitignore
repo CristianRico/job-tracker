@@ -1,0 +1,6 @@
+# hola
+
+.venv
+__pycache__
+*.db
+venv/

@@ -1,30 +1,21 @@
 import sqlite3
+from pathlib import Path
 
-DB_PATH = "jobs.db"
-DB_QUERY = """
-                CREATE TABLE IF NOT EXISTS candidaturas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    empresa TEXT NOT NULL,
-                    puesto TEXT NOT NULL,
-                    url TEXT,
-                    estado TEXT DEFAULT 'wishlist' check(estado IN ('wishlist', 'applied', 'interview', 'offer', 'rejected')),
-                    fecha_candidatura TEXT,
-                    notas TEXT,
-                    fecha_añadida TEXT DEFAULT (date('now'))  -- formato YYYY-MM-DD
-                );
-            """
+CURRENT_DIR = Path(__file__).resolve().parent
+SCHEMA_PATH = CURRENT_DIR / "schema.sql"
+DB_PATH = CURRENT_DIR / "jobs.db"
+
 ESTADOS_VALIDOS = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
-def get_conn():
-    conn = sqlite3.connect(DB_PATH)
+def get_conn(path=DB_PATH):
+    conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row  # filas accesibles por nombre
     return conn
 
 def init_db(conn):
-    """Inicializa la base de datos creando la tabla jobs si no existe."""
-    with conn:
-            conn.execute(DB_QUERY)
-            conn.commit()
+    """Inicializa la base de datos creando la tabla candidaturas si no existe."""
+    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+        conn.executescript(f.read())
 
 def add_candidatura(conn, empresa, puesto, url=None, estado='wishlist', fecha_candidatura=None, notas=None):
     with conn:

@@ -1,13 +1,11 @@
 import pytest
-import sqlite3
 import datetime
 import repository as db
 
 @pytest.fixture
 def conn():
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    conn.executescript(db.DB_QUERY)
+    conn = db.get_conn(":memory:")
+    db.init_db(conn)
     yield conn
     conn.close()
 

@@ -1,4 +1,4 @@
-☐ Fase 1: Esqueleto e infraestructura inicial
+✔ Fase 1: Esqueleto e infraestructura inicial @done(26-09-25 11:43)
     ✔ Crear entorno (venv) e instalar pytest @started(26-09-24 11:31) @done(26-09-24 11:35) @lasted(4m27s)
     ✔ Configurar .gitignore (.venv, __pycache__, *.db) @done(26-09-24 11:35)
     ✔ Diseñar schema.sql (tabla, restricciones NOT NULL, CHECK para status, DEFAULTs) @started(26-09-24 11:42) @done(26-09-24 11:51) @lasted(9m32s)
@@ -7,3 +7,9 @@
     ✔ Configurar fixture de BD temporal (:memory:) en conftest.py o test_repository.py @done(26-09-25 11:06)
     ✔ Escribir test para add_job comprobando inserción y lectura correcta @done(26-09-25 11:06)
     ✔ Verificar pytest en verde y push (Hito 1) @done(26-09-25 11:06)
+
+☐ Fase 2:
+    ☐ Unificar el schema
+    ☐ Filtrar candidaturas por estado
+    ☐ Tests
+        ☐ ID no existe

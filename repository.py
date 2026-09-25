@@ -1,13 +1,17 @@
 import sqlite3
+import datetime
 from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = CURRENT_DIR / "schema.sql"
 DB_PATH = CURRENT_DIR / "jobs.db"
 
-ESTADOS_VALIDOS = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
+VALID_STATUSES = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
 class IdNotFoundError(Exception):
+    pass
+
+class WrongStatusError(Exception):
     pass
 
 def get_conn(path=DB_PATH):
@@ -16,42 +20,61 @@ def get_conn(path=DB_PATH):
     return conn
 
 def init_db(conn):
-    """Inicializa la base de datos creando la tabla candidaturas si no existe."""
+    """Inicializa la base de datos creando la tabla jobs si no existe."""
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
         conn.executescript(f.read())
 
-def add_candidatura(conn, empresa, puesto, url=None, estado='wishlist', fecha_candidatura=None, notas=None):
-    query = "INSERT INTO candidaturas (empresa, puesto, url, estado, fecha_candidatura, notas) VALUES (?, ?, ?, ?, ?, ?)"
-    params = (empresa, puesto, url, estado, fecha_candidatura, notas)
+def add_job(conn, company, position, url=None, status='wishlist', applied_at=None, notes=None):
+    query = "INSERT INTO jobs (company, position, url, status, applied_at, notes) VALUES (?, ?, ?, ?, ?, ?)"
+    params = (company, position, url, status, applied_at, notes)
 
     with conn:
         return conn.execute(query, params).lastrowid
 
-def list_candidaturas(conn, estado=None):
-    query = "SELECT * FROM candidaturas"
+def list_jobs(conn, status=None):
+    query = "SELECT * FROM jobs"
     params = ()
 
-    if estado is not None:
-        query += " WHERE estado = ?"
-        params = (estado,)
+    if status is not None:
+        query += " WHERE status = ?"
+        params = (status,)
 
     with conn:
         return conn.execute(query, params).fetchall()
 
-def show_candidatura(conn, id):
-    query = "SELECT * FROM candidaturas WHERE id = ?"
-    params = (id,)
+def get_job(conn, job_id):
+    query = "SELECT * FROM jobs WHERE id = ?"
+    params = (job_id,)
     with conn:
         row = conn.execute(query, params).fetchone()
         if row is not None:
             return row
         else:
-            raise IdNotFoundError(f"No se encontró candidatura con id {id}")
+            raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")
 
-def delete_candidatura(conn, id):
-    query = "DELETE FROM candidaturas WHERE id = ?"
-    params = (id,)
+def delete_job(conn, job_id):
+    query = "DELETE FROM jobs WHERE id = ?"
+    params = (job_id,)
     with conn:
         cursor = conn.execute(query, params)
         if cursor.rowcount == 0:
-            raise IdNotFoundError(f"No se encontró candidatura con id {id}")
+            raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")
+
+def update_job(conn, job_id, status):
+    if status not in VALID_STATUSES:
+        raise WrongStatusError(f"Estado [{status}] inválido. Estados válidos: {VALID_STATUSES}")
+    
+    hoy = str(datetime.date.today())
+    query = """UPDATE jobs
+                SET status = ?,
+                    applied_at = CASE
+                        WHEN ? = 'applied' THEN COALESCE(applied_at, ?)
+                        ELSE applied_at
+                    END
+                WHERE id = ?"""
+    params = (status, status, hoy, job_id)
+
+    with conn:
+        cursor = conn.execute(query, params)
+        if cursor.rowcount == 0:
+            raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")

@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS candidaturas (
+CREATE TABLE IF NOT EXISTS jobs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    empresa TEXT NOT NULL,
-    puesto TEXT NOT NULL,
+    company TEXT NOT NULL,
+    position TEXT NOT NULL,
     url TEXT,
-    estado TEXT DEFAULT 'wishlist' check(estado IN ('wishlist', 'applied', 'interview', 'offer', 'rejected')),
-    fecha_candidatura TEXT,
-    notas TEXT,
-    fecha_añadida TEXT DEFAULT (date('now'))  -- formato YYYY-MM-DD
+    status TEXT DEFAULT 'wishlist' check(status IN ('wishlist', 'applied', 'interview', 'offer', 'rejected')),
+    applied_at TEXT,
+    notes TEXT,
+    created_at TEXT DEFAULT (date('now'))  -- formato YYYY-MM-DD
 );

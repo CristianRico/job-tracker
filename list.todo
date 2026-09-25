@@ -8,10 +8,17 @@
     ✔ Escribir test para add_job comprobando inserción y lectura correcta @done(26-09-25 11:06)
     ✔ Verificar pytest en verde y push (Hito 1) @done(26-09-25 11:06)
 
-☐ Fase 2:
+✔ Fase 2: @done(26-09-25 16:27)
     ✔ Unificar el schema @done(26-09-25 11:44)
     ✔ Filtrar candidaturas por estado @done(26-09-25 12:34)
     ✔ Tests @done(26-09-25 12:34)
-    ☐ Show
 
-☐ Fase 3:
+✔ Fase 3: @done(26-09-25 16:27)
+ ✔ Decidir enfoque regla 2 (validación de estado): ¿dejar que salte el CHECK de SQLite, o validar en Python con ESTADOS_VALIDOS y lanzar excepción propia? @done(26-09-25 16:13)
+ ✔ Decidir enfoque regla 4 (fecha automática en applied): ¿resolverlo en Python (leer y comparar) o en SQL con COALESCE? @done(26-09-25 16:17)
+    ✔ cambia el estado correctamente @done(26-09-25 16:12)
+    ✔ un estado inválido lanza un error @done(26-09-25 16:12)
+    ✔ un id que no existe lanza IdNotFoundError @done(26-09-25 16:12)
+    ✔ al pasar a applied sin fecha, se guarda la de hoy @done(26-09-25 16:27)
+    ✔ al pasar a applied con fecha, se mantiene la fecha original @done(26-09-25 16:27)
+ ✔ Implementar update_candidatura hasta que los tests pasen @done(26-09-25 16:27)

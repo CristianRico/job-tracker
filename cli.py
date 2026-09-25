@@ -21,7 +21,7 @@ def build_parser():
     p_add.add_argument("--notes")
 
     p_list = sub.add_parser("list", help="Lista de candidaturas")
-    p_list.add_argument("--status", help="Filtra por Estado", choices=db.ESTADOS_VALIDOS)
+    p_list.add_argument("--status", help="Filtra por Estado", choices=db.VALID_STATUSES)
 
     p_show = sub.add_parser("show", help="Muestra una candidatura por ID")
     p_show.add_argument("id", type=int)

@@ -54,7 +54,7 @@ def test_show_candidatura_wrong_id(conn_con_candidaturas):
 
 def test_show_candidatura(conn_con_candidaturas):
     candidatura_id = 1
-    row = db.show_candidatura(conn_con_candidaturas, id)
+    row = db.show_candidatura(conn_con_candidaturas, candidatura_id)
     assert row is not None
     assert row["id"] == candidatura_id
     assert row["empresa"] == "Acme"

@@ -48,9 +48,9 @@ def test_list_candidaturas_vacia(conn):
     assert len(rows) == 0
 
 def test_show_candidatura_wrong_id(conn_con_candidaturas):
-    id = 4
-    with pytest.raises(db.IdNotFoundError, match=f"No se encontró candidatura con id {id}"):
-        db.show_candidatura(conn_con_candidaturas, id)
+    candidatura_id = 4
+    with pytest.raises(db.IdNotFoundError, match=f"No se encontró candidatura con id {candidatura_id}"):
+        db.show_candidatura(conn_con_candidaturas, candidatura_id)
 
 def test_show_candidatura(conn_con_candidaturas):
     candidatura_id = 1
@@ -58,3 +58,14 @@ def test_show_candidatura(conn_con_candidaturas):
     assert row is not None
     assert row["id"] == candidatura_id
     assert row["empresa"] == "Acme"
+
+def test_delete_candidatura(conn_con_candidaturas):
+    candidatura_id = 1
+    db.delete_candidatura(conn_con_candidaturas, candidatura_id)
+    with pytest.raises(db.IdNotFoundError, match=f"No se encontró candidatura con id {candidatura_id}"):
+        db.show_candidatura(conn_con_candidaturas, candidatura_id)
+
+def test_delete_candidatura_wrong_id(conn_con_candidaturas):
+    candidatura_id = 4
+    with pytest.raises(db.IdNotFoundError, match=f"No se encontró candidatura con id {candidatura_id}"):
+        db.delete_candidatura(conn_con_candidaturas, candidatura_id)

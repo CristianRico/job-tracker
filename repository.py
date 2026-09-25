@@ -47,3 +47,11 @@ def show_candidatura(conn, id):
             return row
         else:
             raise IdNotFoundError(f"No se encontró candidatura con id {id}")
+
+def delete_candidatura(conn, id):
+    query = "DELETE FROM candidaturas WHERE id = ?"
+    params = (id,)
+    with conn:
+        cursor = conn.execute(query, params)
+        if cursor.rowcount == 0:
+            raise IdNotFoundError(f"No se encontró candidatura con id {id}")

@@ -9,6 +9,13 @@ def conn():
     yield conn
     conn.close()
 
+@pytest.fixture
+def conn_con_candidaturas(conn):
+    db.add_candidatura(conn, "Acme", "Junior Python Dev")
+    db.add_candidatura(conn, "Globex", "Backend Developer", estado="applied", fecha_candidatura="2026-09-20")
+    db.add_candidatura(conn, "Initech", "Data Engineer", estado="applied", fecha_candidatura="2026-09-22")
+    return conn
+
 def test_add_candidatura(conn):
     row_id = db.add_candidatura(conn, "Claude", "CEO", url="http://claude.io", fecha_candidatura="2025-02-01", notas="esta es una nota")
     row = conn.execute(
@@ -24,3 +31,15 @@ def test_add_candidatura(conn):
     assert row["fecha_candidatura"] == "2025-02-01"
     assert row["notas"] == "esta es una nota"
     assert row["fecha_añadida"] == str(datetime.date.today())
+
+def test_list_candidaturas(conn_con_candidaturas):
+    rows = db.list_candidaturas(conn_con_candidaturas)
+    assert len(rows) == 3
+
+def test_list_candidaturas_estado(conn_con_candidaturas):
+    rows = db.list_candidaturas(conn_con_candidaturas, "applied")
+    assert len(rows) == 2
+
+def test_list_candidaturas_vacia(conn):
+    rows = db.list_candidaturas(conn)
+    assert len(rows) == 0

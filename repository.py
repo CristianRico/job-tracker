@@ -18,13 +18,19 @@ def init_db(conn):
         conn.executescript(f.read())
 
 def add_candidatura(conn, empresa, puesto, url=None, estado='wishlist', fecha_candidatura=None, notas=None):
-    with conn:
-        cur = conn.execute(
-            "INSERT INTO candidaturas (empresa, puesto, url, estado, fecha_candidatura, notas) VALUES (?, ?, ?, ?, ?, ?)",
-            (empresa, puesto, url, estado, fecha_candidatura, notas),
-        )
-        return cur.lastrowid
+    query = "INSERT INTO candidaturas (empresa, puesto, url, estado, fecha_candidatura, notas) VALUES (?, ?, ?, ?, ?, ?)"
+    params = (empresa, puesto, url, estado, fecha_candidatura, notas)
 
-def list_candidaturas(conn):
     with conn:
-        return conn.execute("SELECT * FROM jobs").fetchall()
+        return conn.execute(query, params).lastrowid
+
+def list_candidaturas(conn, estado=None):
+    query = "SELECT * FROM candidaturas"
+    params = ()
+
+    if estado is not None:
+        query += " WHERE estado = ?"
+        params = (estado,)
+
+    with conn:
+        return conn.execute(query, params).fetchall()

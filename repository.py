@@ -7,6 +7,9 @@ DB_PATH = CURRENT_DIR / "jobs.db"
 
 ESTADOS_VALIDOS = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
+class IdNotFoundError(Exception):
+    pass
+
 def get_conn(path=DB_PATH):
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row  # filas accesibles por nombre
@@ -34,3 +37,13 @@ def list_candidaturas(conn, estado=None):
 
     with conn:
         return conn.execute(query, params).fetchall()
+
+def show_candidatura(conn, id):
+    query = "SELECT * FROM candidaturas WHERE id = ?"
+    params = (id,)
+    with conn:
+        row = conn.execute(query, params).fetchone()
+        if row is not None:
+            return row
+        else:
+            raise IdNotFoundError(f"No se encontró candidatura con id {id}")

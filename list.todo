@@ -9,7 +9,9 @@
     ✔ Verificar pytest en verde y push (Hito 1) @done(26-09-25 11:06)
 
 ☐ Fase 2:
-    ☐ Unificar el schema
-    ☐ Filtrar candidaturas por estado
-    ☐ Tests
-        ☐ ID no existe
+    ✔ Unificar el schema @done(26-09-25 11:44)
+    ✔ Filtrar candidaturas por estado @done(26-09-25 12:34)
+    ✔ Tests @done(26-09-25 12:34)
+    ☐ Show
+
+☐ Fase 3:

@@ -5,8 +5,65 @@
 # python -m job_tracker delete ID
 # python -m job_tracker stats          # nº de candidaturas por estado
 
+import sys
 import argparse
 import repository as db
+from tabulate import tabulate
+
+############
+#   UTIL   #
+############
+
+def print_job(job):
+    data = [[key, job[key]] for key in job.keys()]
+    print(tabulate(data, headers=["Campo", "Valor"], tablefmt="simple"))
+
+
+################
+#   DB CALLS   #
+################
+
+def _add(conn, args):
+    job_id = db.add_job(
+                    conn,
+                    company=args.company,
+                    position=args.position,
+                    url=args.url,
+                    notes=args.notes
+                )
+    print(f"Candidatura en {args.company} como {args.position} añadida con id {job_id}")
+
+def _list(conn, args):
+    status = args.status.strip() if args.status else None
+    jobs = db.list_jobs(conn, status=status)
+
+    if not jobs:
+        msg = f"No hay candidaturas con estado '{status}'." if status else "No hay candidaturas todavía."
+        print(msg)
+    else:
+        headers = list(jobs[0].keys())
+        print(tabulate(jobs, headers=headers, tablefmt="simple"))
+
+def _show(conn, args):
+    job = db.get_job(conn, args.id)
+    print_job(job)
+
+def _update(conn, args):
+    db.update_job(conn, args.id, args.status)
+    job = db.get_job(conn, args.id)
+    print_job(job)
+
+def _delete(conn, args):
+    db.delete_job(conn, args.id)
+    print(f"Se ha eliminado la candidatura {args.id}")
+
+def _stats(conn):
+    stat_list = db.count_by_status(conn)
+    print(tabulate(stat_list.items(), headers=["Estado", "Total"], tablefmt="simple"))
+
+##############
+#   PARSER   #
+##############
 
 def build_parser():
     parser = argparse.ArgumentParser(prog='Job Tracker', 
@@ -37,20 +94,32 @@ def build_parser():
 
     return parser
 
+
+###########
+#   CLI   #
+###########
+
 if __name__ == "__main__":
     args = build_parser().parse_args()
 
-    if args.command == "add":
-        print("Add")
-    elif args.command == "list":
-        pass
-    elif args.command == "show":
-        pass
-    elif args.command == "update":
-        pass
-    elif args.command == "delete":
-        pass
-    elif args.command == "stats":
-        pass
-
-
+    conn = db.get_conn()
+    db.init_db(conn)
+    
+    try:
+        if args.command == "add":
+            _add(conn, args)
+        elif args.command == "list":
+            _list(conn, args)
+        elif args.command == "show":
+            _show(conn, args)
+        elif args.command == "update":
+            _update(conn, args)
+        elif args.command == "delete":
+            _delete(conn, args)
+        elif args.command == "stats":
+            _stats(conn, )
+    except db.RepoError as e:
+        sys.stderr.write(f"Error: {e}\n")
+        sys.exit(1)
+    finally:
+        conn.close()

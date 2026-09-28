@@ -30,16 +30,16 @@
  ✔ count_by_status(conn) en repository.py con GROUP BY @started(26-09-28 10:59) @done(26-09-28 11:10) @lasted(11m37s)
     ✔ Test contra conn_with_jobs: pegar el rojo antes de implementar @done(26-09-28 11:10)
     ✔ Implementar la query hasta que pase @done(26-09-28 11:10)
- ☐ Borrar jobs.db local (tiene la tabla antigua candidaturas)
- ☐ Conectar la CLI: get_conn + init_db en main, cada comando llama a su función e imprime
-    ☐ add
-    ☐ list (con --status)
-    ☐ show
-    ☐ update
-    ☐ delete
-    ☐ stats
- ☐ Regla 5: try/except único alrededor del despacho, mensaje legible por sys.stderr y sys.exit con código != 0
- ☐ Probar a mano cada comando en la terminal, incluidos los casos de error
+ ✔ Borrar jobs.db local (tiene la tabla antigua candidaturas) @done(26-09-28 11:51)
+ ✔ Conectar la CLI: get_conn + init_db en main, cada comando llama a su función e imprime @done(26-09-28 12:43)
+    ✔ add @done(26-09-28 12:13)
+    ✔ list (con --status) @done(26-09-28 12:13)
+    ✔ show @done(26-09-28 12:39)
+    ✔ update @done(26-09-28 12:39)
+    ✔ delete @done(26-09-28 12:39)
+    ✔ stats @done(26-09-28 12:39)
+ ✔ Regla 5: try/except único alrededor del despacho, mensaje legible por sys.stderr y sys.exit con código != 0 @done(26-09-28 12:41)
+ ✔ Probar a mano cada comando en la terminal, incluidos los casos de error @done(26-09-28 12:42)
  ☐ pytest en verde pegado + push (Hito 4)
 
 ☐ Fase 5: Entrega

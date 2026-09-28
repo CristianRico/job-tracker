@@ -8,13 +8,16 @@ DB_PATH = CURRENT_DIR / "jobs.db"
 
 VALID_STATUSES = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
-class RequiredFieldError(Exception):
+class RepoError(Exception):
     pass
 
-class IdNotFoundError(Exception):
+class RequiredFieldError(RepoError):
     pass
 
-class WrongStatusError(Exception):
+class IdNotFoundError(RepoError):
+    pass
+
+class WrongStatusError(RepoError):
     pass
 
 def get_conn(path=DB_PATH):

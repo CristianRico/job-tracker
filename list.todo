@@ -22,3 +22,27 @@
     ✔ al pasar a applied sin fecha, se guarda la de hoy @done(26-09-25 16:27)
     ✔ al pasar a applied con fecha, se mantiene la fecha original @done(26-09-25 16:27)
  ✔ Implementar update_candidatura hasta que los tests pasen @done(26-09-25 16:27)
+ ✔ Regla 1: empresa/puesto vacíos o solo espacios lanzan RequiredFieldError (_validate_required) @done(26-09-28 10:44)
+ ✔ add_job valida el estado con _validate_status, compartida con update_job @done(26-09-28 10:44)
+
+☐ Fase 4: CLI
+ ✔ Devolver test_list_jobs_by_status a "applied" (pytest en verde) @done(26-09-28 10:59)
+ ✔ count_by_status(conn) en repository.py con GROUP BY @started(26-09-28 10:59) @done(26-09-28 11:10) @lasted(11m37s)
+    ✔ Test contra conn_with_jobs: pegar el rojo antes de implementar @done(26-09-28 11:10)
+    ✔ Implementar la query hasta que pase @done(26-09-28 11:10)
+ ☐ Borrar jobs.db local (tiene la tabla antigua candidaturas)
+ ☐ Conectar la CLI: get_conn + init_db en main, cada comando llama a su función e imprime
+    ☐ add
+    ☐ list (con --status)
+    ☐ show
+    ☐ update
+    ☐ delete
+    ☐ stats
+ ☐ Regla 5: try/except único alrededor del despacho, mensaje legible por sys.stderr y sys.exit con código != 0
+ ☐ Probar a mano cada comando en la terminal, incluidos los casos de error
+ ☐ pytest en verde pegado + push (Hito 4)
+
+☐ Fase 5: Entrega
+ ☐ Convertir el proyecto en paquete para poder usar python -m job_tracker
+ ☐ README: qué es, instalación, uso con ejemplos y cómo ejecutar los tests
+ ☐ Repo limpio + push (criterio de salida de la Fase 2 del roadmap)

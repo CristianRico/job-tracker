@@ -86,6 +86,21 @@ def update_job(conn, job_id, status):
         if cursor.rowcount == 0:
             raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")
 
+def count_by_status(conn):
+    query = "SELECT status, COUNT(*) FROM jobs GROUP BY status"
+    with conn:
+        rows = conn.execute(query).fetchall()
+
+        result = {status: 0 for status in VALID_STATUSES}
+        for status, total in rows:
+            result[status] = total
+
+        return result
+
+
+
+## VALIDACIONES ##
+
 def _validate_required(required, field):
     if not required or not required.strip():
             raise RequiredFieldError(f"El campo {field} no puede estar vacío.")

@@ -136,3 +136,8 @@ def test_update_applied_date(conn_with_job_date):
     new_job = db.get_job(conn_with_job_date, job_id)
 
     assert old_job["applied_at"] == new_job["applied_at"]
+
+def test_count_by_status(conn_with_jobs):
+    result = db.count_by_status(conn_with_jobs)
+    expected_result = {'wishlist': 1, 'applied': 2, 'interview': 0, 'offer': 0, 'rejected': 0}
+    assert result == expected_result

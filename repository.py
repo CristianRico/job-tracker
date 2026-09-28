@@ -64,7 +64,7 @@ def update_job(conn, job_id, status):
     if status not in VALID_STATUSES:
         raise WrongStatusError(f"Estado [{status}] inválido. Estados válidos: {VALID_STATUSES}")
     
-    hoy = str(datetime.date.today())
+    today = str(datetime.date.today())
     query = """UPDATE jobs
                 SET status = ?,
                     applied_at = CASE
@@ -72,7 +72,7 @@ def update_job(conn, job_id, status):
                         ELSE applied_at
                     END
                 WHERE id = ?"""
-    params = (status, status, hoy, job_id)
+    params = (status, status, today, job_id)
 
     with conn:
         cursor = conn.execute(query, params)

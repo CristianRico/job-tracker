@@ -101,13 +101,13 @@ def test_update_applied_nodate(conn_with_jobs):
     job_id = 1
     old_job = db.get_job(conn_with_jobs, job_id)
 
-    db.update_job(conn_with_jobs, 1, "applied")
+    db.update_job(conn_with_jobs, job_id, "applied")
 
     new_job = db.get_job(conn_with_jobs, job_id)
-    hoy = str(datetime.date.today())
+    today = str(datetime.date.today())
 
-    assert old_job["applied_at"] == None
-    assert new_job["applied_at"] == hoy
+    assert old_job["applied_at"] is None
+    assert new_job["applied_at"] == today
 
 #Al pasar a applied con fecha, se mantiene la fecha original
 def test_update_applied_date(conn_with_job_date):

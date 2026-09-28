@@ -8,6 +8,9 @@ DB_PATH = CURRENT_DIR / "jobs.db"
 
 VALID_STATUSES = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
+class RequiredFieldError(Exception):
+    pass
+
 class IdNotFoundError(Exception):
     pass
 
@@ -25,11 +28,16 @@ def init_db(conn):
         conn.executescript(f.read())
 
 def add_job(conn, company, position, url=None, status='wishlist', applied_at=None, notes=None):
+    _validate_required(company, "empresa")
+    _validate_required(position, "posición")
+    _validate_status(status)
+
     query = "INSERT INTO jobs (company, position, url, status, applied_at, notes) VALUES (?, ?, ?, ?, ?, ?)"
     params = (company, position, url, status, applied_at, notes)
 
     with conn:
         return conn.execute(query, params).lastrowid
+
 
 def list_jobs(conn, status=None):
     query = "SELECT * FROM jobs"
@@ -61,8 +69,7 @@ def delete_job(conn, job_id):
             raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")
 
 def update_job(conn, job_id, status):
-    if status not in VALID_STATUSES:
-        raise WrongStatusError(f"Estado [{status}] inválido. Estados válidos: {VALID_STATUSES}")
+    _validate_status(status)
     
     today = str(datetime.date.today())
     query = """UPDATE jobs
@@ -78,3 +85,11 @@ def update_job(conn, job_id, status):
         cursor = conn.execute(query, params)
         if cursor.rowcount == 0:
             raise IdNotFoundError(f"No se encontró candidatura con id {job_id}")
+
+def _validate_required(required, field):
+    if not required or not required.strip():
+            raise RequiredFieldError(f"El campo {field} no puede estar vacío.")
+
+def _validate_status(status):
+    if status not in VALID_STATUSES:
+        raise WrongStatusError(f"Estado [{status}] inválido. Estados válidos: {VALID_STATUSES}")

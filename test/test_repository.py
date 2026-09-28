@@ -38,6 +38,23 @@ def test_add_job(conn):
     assert row["notes"] == "esta es una nota"
     assert row["created_at"] == str(datetime.date.today())
 
+def test_add_job_empty_company(conn):
+    with pytest.raises(db.RequiredFieldError, 
+                       match="El campo empresa no puede estar vacío."):
+        db.add_job(conn, " ", "CEO")
+
+def test_add_job_empty_position(conn):
+    with pytest.raises(db.RequiredFieldError, 
+                       match="El campo posición no puede estar vacío."):
+        db.add_job(conn, "Claude", "")
+
+def test_add_job_wrong_status(conn):
+    status = "wrong"
+    msg = f"Estado [{status}] inválido. Estados válidos: {db.VALID_STATUSES}"
+    with pytest.raises(db.WrongStatusError, match=re.escape(msg)):
+        db.add_job(conn, "Claude", "CEO", status=status)
+
+
 def test_list_jobs(conn_with_jobs):
     rows = db.list_jobs(conn_with_jobs)
     assert len(rows) == 3

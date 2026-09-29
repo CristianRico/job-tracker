@@ -1,7 +1,7 @@
 import pytest
 import datetime
 import re
-import repository as db
+from job_tracker import repository as db
 
 @pytest.fixture
 def conn():

@@ -7,8 +7,8 @@
 
 import sys
 import argparse
-import repository as db
 from tabulate import tabulate
+from job_tracker import repository as db
 
 ############
 #   UTIL   #

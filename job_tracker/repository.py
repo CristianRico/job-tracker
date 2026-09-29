@@ -4,7 +4,7 @@ from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = CURRENT_DIR / "schema.sql"
-DB_PATH = CURRENT_DIR / "jobs.db"
+DB_PATH = Path.home() / ".job_tracker.db"
 
 VALID_STATUSES = ['wishlist', 'applied', 'interview', 'offer', 'rejected']
 
